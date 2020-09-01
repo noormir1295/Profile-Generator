@@ -10,9 +10,24 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+//Empty array to show different roles
+const teamArray=[];
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+const managerQuestions = [
+  {
+    type: "Input",
+    name: "managerName",
+    message:
+      "Who is the manager of this team? If you are the manager, please write your name.",
+  },
+  {
+    type: "Input",
+    name: "managerName",
+    message:
+      "Who is the manager of this team? If you are the manager, please write your name.",
+  },
+];
+
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
