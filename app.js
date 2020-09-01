@@ -13,6 +13,7 @@ const render = require("./lib/htmlRenderer");
 //Empty array to show different roles
 const teamArray=[];
 
+//Manager Questions
 const managerQuestions = [
   {
     type: "Input",
@@ -22,29 +23,167 @@ const managerQuestions = [
   },
   {
     type: "Input",
-    name: "managerName",
+    name: "managerId",
     message:
-      "Who is the manager of this team? If you are the manager, please write your name.",
+      "What is this managers ID number? Enter your ID number if you are the manager of this team.",
+  },
+  {
+    type: "Input",
+    name: "managerEmail",
+    message:
+      "What is this managers email address? Enter your email adress if you are the manager.",
+  },
+  {
+    type: "Input",
+    name: "managerOfficeNumber",
+    message:
+      "What is this managers office number? if you are the manager of this team, enter your office number",
+  },
+];
+//Engineer Questions
+const engineerQuestions = [
+  {
+    type: "Input",
+    name: "engineerName",
+    message:
+      "Who is the Engineer of this project?",
+  },
+  {
+    type: "Input",
+    name: "engineerId",
+    message:
+      "What is the ID number of the engineer?",
+  },
+  {
+    type: "Input",
+    name: "engineerEmail",
+    message:
+      "What is the email of the Engineer",
+  },
+  {
+    type: "Input",
+    name: "github",
+    message:
+      "What is the engineers github?",
+  },
+];
+
+//Intern
+const internQuestions = [
+  {
+    type: "Input",
+    name: "internName",
+    message: "Who is the Intern of this project?",
+  },
+  {
+    type: "Input",
+    name: "internId",
+    message: "What is the ID number of the Intern?",
+  },
+  {
+    type: "Input",
+    name: "internEmail",
+    message: "What is the email of the Intern",
+  },
+  {
+    type: "Input",
+    name: "school",
+    message: "What school does the Intern attend to or has attended?",
+  },
+]; 
+
+//Adding additional intern or engineer
+const anotherPerson = [
+  {
+    type: "list",
+    name: "nextEmployee",
+    message: "Would you like to add another person in this project? If not, select Done",
+    choices:["Engineer", "Intern", "Done"]
   },
 ];
 
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
+ 
 
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
+//next person function 
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
+function next(){
+    inquirer.prompt(anotherPerson).then((response)=>{
+        console.log(response);
+        switch (response.nextEmployee) {
+      case "Engineer":
+        engineerPrompt();
+        break;
+      case "Intern":
+        internPrompt();
+        break;
+      case "Done":
+        console.log("Creating your team!");
+        makeTeam();
+    };
+});
+}
 
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+//manager prompt
+function managerPrompt() {
+    inquirer.prompt(managerQuestions).then((response)=>{
+        let name=response.managerName;
+        let id=response.managerId;
+        let email=response.managerEmail;
+        let office=response.managerOfficeNumber;
+
+    // creating object
+    const manager = new Manager(name, id, email, office);
+
+    teamArray.push(manager);
+        console.log(teamArray)
+    next();
+    })
+}
+//creating prompt for engineer
+function engineerPrompt(){
+    inquirer.prompt(engineerQuestions).then((response)=>{
+        let name=response.engineerName;
+        let id=response.engineerId;
+        let email=response.engineerEmail;
+        let github=response.github;
+
+        const engineer = new Engineer(name, id, email, github);
+        //pushing engineer to team array
+        teamArray.push(engineer);
+        console.log(teamArray)
+        next();
+
+    })
+}
+//creating prompt for intern 
+function internPrompt(){
+    inquirer.prompt(internQuestions).then((response)=>{
+    let name=response.internName;
+    let id=response.internId;
+    let email=response.internEmail;
+    let school=response.school;
+
+    const intern= new Intern(name, id, email, school);
+//pushing intern to team array
+    teamArray.push(intern);
+    console.log(teamArray);
+    next();
+    });
+}
+
+//starting prompt with manager 
+function init() {
+    managerPrompt();
+};
+//vreating html file for the whole team
+function makeTeam(){
+    fs.writeFile(outputPath, render(teamArray), (err) =>{
+        if(err){
+           return console.log(err)
+        }
+    });
+}
+
+init();
+
