@@ -173,7 +173,7 @@ function internPrompt(){
 }
 
 //starting prompt with manager 
-function init() {
+function start() {
     managerPrompt();
 };
 //vreating html file for the whole team
@@ -185,5 +185,5 @@ function makeTeam(){
     });
 }
 
-init();
+start();
 
